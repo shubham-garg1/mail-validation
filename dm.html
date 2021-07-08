@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="email" name="email" id="email">
+    <button onclick="check()"> Click me</button>
+    <script>
+        // function check() {
+        //     var restURL = "http://apilayer.net/api/check?access_key=c5118f1f9827f42a5fc4b231932130a8&email=" + document.getElementById('email').value + "&smtp=1&format=1"
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: restURL,
+        //         dataType: "json",
+        //         success: renderList,
+        //     });
+        //     return false;
+        // }
+
+
+        //     function renderList(data) {
+        //         if ((data.format_valid == true) && (data.smtp_check == true)) {
+        //             alert("Valid email");
+        //         } else {
+        //             alert("Invalid email");
+        //         }
+        //     }
+
+        function check() {
+            var restURL = "https://apilayer.net/api/check?access_key=c5118f1f9827f42a5fc4b231932130a8&email=" + document.getElementById('email').value + "&smtp=1&format=1"
+            fetch(restURL)
+                .then(response => response.json())
+                .then(data => renderList(data));
+        }
+
+        function renderList(data) {
+            console.log(data, data.email, data.smtp_check)
+            if (data.email && data.smtp_check) {
+                alert("Valid email");
+            } 
+            else 
+            {
+                if (data.error) 
+                {
+                    if (data.error.type.includes('limit'))
+                        console.log("Limit reached")
+                    else if (data.error.type.includes("no_email")) 
+                    {
+                        alert("empty email");
+                    } 
+                    else {
+                        alert("Unknown error, check console");
+                        console.log("unknown issue", data);
+                    }
+                }
+                else
+                    alert("Invalid email");
+            }
+        }
+    </script>
+</body>
+
+</html>
